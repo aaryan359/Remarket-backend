@@ -1,6 +1,6 @@
-import mongoose, {Schema} from "mongoose";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import mongoose, {Model, Schema} from "mongoose";
+import { IUser } from "../types/user";
+
 
 
 const UserSchema = new Schema(
@@ -32,7 +32,11 @@ const UserSchema = new Schema(
                 type: Schema.Types.ObjectId,
                 ref: 'Product',
             }
-        ]
+        ],
+        cart:{
+            type:Schema.Types.ObjectId,
+            ref:'Cart'
+        }
 
     },
     {
@@ -42,48 +46,6 @@ const UserSchema = new Schema(
 
 
 
-UserSchema.pre("save", async function (next) {
-    if(!this.isModified("password")) return next();
 
-
-    this.password = await bcrypt.hash(this.password, 10)
-    next()
-})
-
-UserSchema.methods.isPasswordCorrect = async function(password: string){
-    return await bcrypt.compare(password, this.password)
-}
-
-
-UserSchema.methods.generateAccessToken = function(){
-    return jwt.sign(
-        {
-            _id: this._id,
-            email: this.email,
-            username: this.username,
-            fullName: this.fullName
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
-        }
-    )
-}
-
-
-// UserSchema.methods.generateRefreshToken = function(){
-//     return jwt.sign(
-//         {
-//             _id: this._id,
-            
-//         },
-//         process.env.REFRESH_TOKEN_SECRET,
-//         {
-//             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-//         }
-//     )
-// }
-
-
-const User = mongoose.model('User', UserSchema);  
+const User: Model<IUser> = mongoose.model<IUser>("Product", UserSchema);
 export default User;

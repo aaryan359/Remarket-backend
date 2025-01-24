@@ -1,21 +1,25 @@
 import express, { Request,Response } from "express";
 import dbconnect from "./Config/db";
-
+import productroutes from "./Routes/ProductRoutes";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-const PORT = 8888;
+
+
 
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 
-app.get('/',(req:Request, res:Response)=>{
-     res.send('helloe lodu')
-})
+app.use('api/v1/',productroutes);
+
+
 
 dbconnect();
 
 
-app.listen(PORT,()=>{
-    console.log(`server is running on port ${PORT}`)
+app.listen(process.env.PORT,()=>{
+    console.log(`server is running on port ${process.env.PORT}`)
 })
 
