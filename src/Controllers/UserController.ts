@@ -1,9 +1,10 @@
+import { Request, Response } from 'express';
 import User from "../Models/User.model";
 
 
 
 // Register User
-const registerUser = async (req, res) => {
+const registerUser = async (req: Request, res: Response): Promise<Response> => {
     const { username, email, password } = req.body;
 
     // Validation - Check for empty fields
@@ -11,12 +12,14 @@ const registerUser = async (req, res) => {
         return res.status(400).json({ message: "All fields are required" });
     }
 
+
     // Check if user already exists by username or email
     try {
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
             return res.status(409).json({ message: "User already exists with this email or username" });
         }
+
 
         // Create new user
         const user = new User({
@@ -44,21 +47,9 @@ const registerUser = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Login User
-const loginUser = async (req: Request, res: Response) => {
-    const { username: , email, password } = req.body;
+const loginUser = async (req: Request, res: Response): Promise<Response> => {
+    const { username, email, password } = req.body;
 
     // Validation - Check if either username or email is provided
     if (!username && !email) {
@@ -79,7 +70,7 @@ const loginUser = async (req: Request, res: Response) => {
         }
 
         // Generate access and refresh tokens
-        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
+        const { accessToken} = await generateAccessTokens(user._id);
 
         // Remove sensitive fields from response
         const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
@@ -88,12 +79,12 @@ const loginUser = async (req: Request, res: Response) => {
         const options = { httpOnly: true, secure: true };
         return res.status(200)
             .cookie("accessToken", accessToken, options)
-            .cookie("refreshToken", refreshToken, options)
+            // .cookie("refreshToken", refreshToken, options)
             .json({
                 status: 200,
                 user: loggedInUser,
                 accessToken,
-                refreshToken,
+                // refreshToken,
                 message: "User logged in successfully",
             });
     } catch (error) {
@@ -102,25 +93,8 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Logout User
-const logoutUser = async (req, res) => {
+const logoutUser = async (req: Request, res: Response): Promise<Response> => {
     try {
         // Clear refreshToken in the database
         await User.findByIdAndUpdate(req.user._id, { $set: { refreshToken: undefined } });
@@ -139,7 +113,5 @@ const logoutUser = async (req, res) => {
         return res.status(500).json({ message: "Something went wrong during logout" });
     }
 };
-
-
 
 export { registerUser, loginUser, logoutUser };
