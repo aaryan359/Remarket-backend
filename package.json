@@ -13,11 +13,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+<<<<<<< HEAD
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.8",
     "bcrypt": "^5.1.1",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+=======
+    "express": "^4.21.2",
+>>>>>>> 40357bc44efaf1804472c97b077862674fb00be5
     "mongoose": "^8.9.5"
   },
   "devDependencies": {
