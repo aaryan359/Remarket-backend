@@ -41,7 +41,6 @@ const addProduct = async (req: Request, res: Response) => {
              response = await cloudinary.uploader.upload(imageFile,{
               resource_type:'auto'
             })
-  
             fs.unlinkSync(imageFile);
           } catch (error) {
               fs.unlinkSync(imageFile);
