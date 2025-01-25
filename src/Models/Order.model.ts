@@ -1,7 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IOrder } from "../types/Order";
 
-
 const OrderSchema: Schema<IOrder> = new Schema(
   {
     user: {
