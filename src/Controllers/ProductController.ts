@@ -1,38 +1,48 @@
 import { Request, response, Response } from "express";
 import Product from "../Models/Product.model";
 import { v2 as cloudinary } from "cloudinary";
-import fs from 'fs'; 
+import fs from 'fs';
 import dotenv from "dotenv";
 dotenv.config();
 
 // Cloudinary configuration
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
+  cloud_name: 'dd5bk5dti',
+  api_key: '578637526532462',
+  api_secret: 'CSQs9hiCGj44EgY7rS1kMa7ry3I',
 });
 
-// Add product function
+
+
 const addProduct = async (req: Request, res: Response) => {
+
   try {
-    const { title, description, price,category } = req.body;
+    const { title, description, price, category } = req.body;
+    console.log({
+      title, description, price, category
+    })
+
+    if (!title || !description || !price || !category) {
+      res.status(404).json({
+        message: "All inputs are required"
+      })
+    }
+
+
+
+
     //@ts-ignore
-    const userId = req.user._id; 
+    const userId = req.user._id;
 
-
-
-
-    // Accessing images array from req.files
-    //@ts-ignore
+    // Access the uploaded image file from req.file
     const imageFile = req.file?.path;
-    console.log("image is ",imageFile);
-
-
+    console.log("Image is: ", imageFile);
 
     if (!imageFile) {
       return res.status(400).json({ success: false, message: "No image uploaded" });
     }
 
+<<<<<<< HEAD
 
     console.log("Image File:", imageFile);
 
@@ -45,12 +55,36 @@ const addProduct = async (req: Request, res: Response) => {
           } catch (error) {
               fs.unlinkSync(imageFile);
               return null;
+=======
+    // Upload the image to Cloudinary
+    let response;
+    try {
+      
+      response = await cloudinary.uploader.upload(imageFile, {
+        resource_type: 'auto',
+        folder: 'remarket',
+        transformation: [
+          {
+            width: 500, 
+            height: 500, 
+            crop: 'fill',
+            gravity: 'center', 
+>>>>>>> Aryan
           }
+        ]
+      });
+      fs.unlinkSync(imageFile);
 
-          const imageUrl = response.url;
-    
+    } catch (error) {
+      // Clean up the file in case of an error
+      fs.unlinkSync(imageFile);
+      return res.status(500).json({ success: false, message: "Error uploading to Cloudinary" });
+    }
 
-    // Create and save the product
+
+    const imageUrl = response.secure_url;
+
+    // Create and save the product in the database
     const product = new Product({
       title,
       description,
@@ -62,8 +96,7 @@ const addProduct = async (req: Request, res: Response) => {
 
     await product.save();
 
-
-    // Send response
+    // Send response back to the client
     res.status(201).json({
       success: true,
       message: "Product uploaded successfully",
@@ -75,4 +108,5 @@ const addProduct = async (req: Request, res: Response) => {
   }
 };
 
-export default addProduct;
+
+export default addProduct
