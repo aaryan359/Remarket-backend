@@ -31,13 +31,6 @@ const register = async(req:Request,res:Response)=>{
           })
            //@ts-ignore
           const newUser = await user.save()
-
-          
-
-
-
-
-        
        } catch (error:any) {
         
        }
