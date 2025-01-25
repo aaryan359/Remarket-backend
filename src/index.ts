@@ -16,8 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 dbconnect();
 
 // Routes
-app.use('/api/v1/', productroutes); // Add leading forward slash
-app.use('/api/v1/', userRoute);     // Add leading forward slash
+app.use('/api/v1/', productroutes); 
+app.use('/api/v1/', userRoute);     
 
 // Start the server
 app.listen(process.env.PORT, () => {
