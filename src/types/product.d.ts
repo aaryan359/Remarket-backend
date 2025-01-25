@@ -5,6 +5,7 @@ export interface IProduct extends Document {
   title: string;
   description: string;
   price: number;
+  category:String,
   user: Types.ObjectId;
 }
 

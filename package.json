@@ -6,6 +6,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
+    "s": "nodemon src/MiddleWares/tempCodeRunnerFile.ts",
     "prestart": "npm run build"
   },
   "keywords": [],
@@ -20,6 +21,7 @@
     "cloudinary": "^2.5.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-fileupload": "^1.5.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "multer": "^1.4.5-lts.1",
@@ -28,6 +30,7 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/express-fileupload": "^1.5.1",
     "@types/node": "^22.10.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"

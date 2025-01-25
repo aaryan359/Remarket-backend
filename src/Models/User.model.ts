@@ -11,7 +11,7 @@ const UserSchema = new Schema(
             unique: true,
             lowercase: true,
             trim: true, 
-            index: true
+            
         },
         email: {
             type: String,
@@ -19,6 +19,7 @@ const UserSchema = new Schema(
             unique: true,
             lowecase: true,
             trim: true, 
+            index:true
         },
         password: {
             type: String,
@@ -27,6 +28,10 @@ const UserSchema = new Schema(
         refreshToken: {
             type: String
         },
+        address:{
+             type:String, 
+        },
+       
         product: [
             {
                 type: Schema.Types.ObjectId,
@@ -46,6 +51,5 @@ const UserSchema = new Schema(
 
 
 
-
-const User: Model<IUser> = mongoose.model<IUser>("Product", UserSchema);
+const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
 export default User;

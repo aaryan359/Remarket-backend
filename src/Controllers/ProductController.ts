@@ -1,54 +1,73 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import Product from "../Models/Product.model";
-import { v2 as cloudinary } from "cloudinary"; // Cloudinary import
+import { v2 as cloudinary } from "cloudinary";
+import fs from 'fs'; 
+import dotenv from "dotenv";
+dotenv.config();
 
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 
-// @ts-ignore: 
+// Add product function
 const addProduct = async (req: Request, res: Response) => {
   try {
-    
-    const { title, description, price } = req.body;
-
-    // @ts-ignore: 
+    const { title, description, price,category } = req.body;
+    //@ts-ignore
     const userId = req.user._id; 
 
 
-    // Cast req.files to the correct type (Multer file array)
-    const imagesarray = req.files as Express.Multer.File[];
 
-    if (!imagesarray || imagesarray.length === 0) {
+
+    // Accessing images array from req.files
+    //@ts-ignore
+    const imageFile = req.file?.path;
+    console.log("image is ",imageFile);
+
+
+
+    if (!imageFile) {
       return res.status(400).json({ success: false, message: "No image uploaded" });
     }
 
 
-    // Upload images to Cloudinary
-    const uploadedImages = await Promise.all(
-      imagesarray.map((file) =>
-        cloudinary.uploader.upload(file.path, {
-          folder: "remarket", 
-        })
-      )
-    );
+    console.log("Image File:", imageFile);
 
-    // Extract image URLs from the Cloudinary upload responses
-    const images = uploadedImages.map((upload) => upload.secure_url);
+          let response;
+          try {
+             response = await cloudinary.uploader.upload(imageFile,{
+              resource_type:'auto'
+            })
+  
+            fs.unlinkSync(imageFile);
+          } catch (error) {
+              fs.unlinkSync(imageFile);
+              return null;
+          }
 
+          const imageUrl = response.url;
     
+
+    // Create and save the product
     const product = new Product({
       title,
       description,
       price,
-      images, 
+      category,
+      images: [imageUrl],
       user: userId,
     });
 
-    
-    const newProduct = await product.save();
+    await product.save();
 
-    
+
+    // Send response
     res.status(201).json({
       success: true,
-      message:"Uploaded Successfully",
+      message: "Product uploaded successfully",
     });
 
   } catch (error: any) {
