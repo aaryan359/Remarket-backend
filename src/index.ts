@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import dbconnect from "./Config/db";
 import productroutes from "./Routes/ProductRoutes";
-import fileUpload from 'express-fileupload';
+
 import userRoute from "./Routes/UserRoutes";
 import dotenv from "dotenv";
 
@@ -11,11 +11,6 @@ const app = express();
 
 // Middleware
 
-// Use express-fileupload middleware
-app.use(fileUpload({
-    createParentPath: true,  // Automatically create upload directory
-  }));
-  
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
