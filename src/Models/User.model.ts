@@ -8,7 +8,6 @@ const UserSchema = new Schema(
         username: {
             type: String,
             required: true,
-            unique: true,
             lowercase: true,
             trim: true, 
             
@@ -16,17 +15,19 @@ const UserSchema = new Schema(
         email: {
             type: String,
             required: true,
-            unique: true,
             lowecase: true,
             trim: true, 
         },
+
         password: {
             type: String,
             required: [true, 'Password is required']
         },
+
         refreshToken: {
             type: String
         },
+        
         address:{
              type:String, 
         },

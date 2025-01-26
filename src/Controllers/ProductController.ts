@@ -42,20 +42,6 @@ const addProduct = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "No image uploaded" });
     }
 
-<<<<<<< HEAD
-
-    console.log("Image File:", imageFile);
-
-          let response;
-          try {
-             response = await cloudinary.uploader.upload(imageFile,{
-              resource_type:'auto'
-            })
-            fs.unlinkSync(imageFile);
-          } catch (error) {
-              fs.unlinkSync(imageFile);
-              return null;
-=======
     // Upload the image to Cloudinary
     let response;
     try {
@@ -69,7 +55,6 @@ const addProduct = async (req: Request, res: Response) => {
             height: 500, 
             crop: 'fill',
             gravity: 'center', 
->>>>>>> Aryan
           }
         ]
       });

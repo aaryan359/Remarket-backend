@@ -2,6 +2,7 @@ import express from "express";
 import addProduct from "../Controllers/ProductController";
 import VerifyJWT from "../MiddleWares/AuthMiddleWare";
 import multer from "multer";
+import addtocart from "../Controllers/CartController";
 
 
 
@@ -26,5 +27,10 @@ const router = express.Router();
 // Route to add product
 //@ts-ignore
 router.post("/addproduct", VerifyJWT, upload.single('image'), addProduct);
+
+//@ts-ignore
+router.post("/addtocart", VerifyJWT, addtocart);
+
+
 
 export default router;
