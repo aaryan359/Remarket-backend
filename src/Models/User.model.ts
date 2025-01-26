@@ -7,28 +7,26 @@ const UserSchema = new Schema(
     {
         username: {
             type: String,
-            required: true,
-            unique: true,
-            lowercase: true,
-            trim: true, 
+            required:true
             
         },
         email: {
             type: String,
-            required: true,
-            unique: true,
-            lowecase: true,
-            trim: true, 
+            required:true
+       
         },
         password: {
             type: String,
-            required: [true, 'Password is required']
+            required:true
+            
         },
         refreshToken: {
-            type: String
+            type: String,
+            require:true
         },
         address:{
              type:String, 
+             required:true
         },
        
         product: [

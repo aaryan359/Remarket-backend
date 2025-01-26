@@ -1,11 +1,14 @@
 import { Request, response, Response } from "express";
 import Product from "../Models/Product.model";
+import User from "../Models/User.model";
 import { v2 as cloudinary } from "cloudinary";
 import fs from 'fs';
 import dotenv from "dotenv";
 dotenv.config();
 
-// Cloudinary configuration
+
+
+
 cloudinary.config({
   cloud_name: 'dd5bk5dti',
   api_key: '578637526532462',
@@ -18,9 +21,7 @@ const addProduct = async (req: Request, res: Response) => {
 
   try {
     const { title, description, price, category } = req.body;
-    console.log({
-      title, description, price, category
-    })
+  
 
     if (!title || !description || !price || !category) {
       res.status(404).json({
@@ -34,28 +35,16 @@ const addProduct = async (req: Request, res: Response) => {
     //@ts-ignore
     const userId = req.user._id;
 
+ 
+
     // Access the uploaded image file from req.file
     const imageFile = req.file?.path;
-    console.log("Image is: ", imageFile);
 
     if (!imageFile) {
       return res.status(400).json({ success: false, message: "No image uploaded" });
     }
 
-<<<<<<< HEAD
 
-    console.log("Image File:", imageFile);
-
-          let response;
-          try {
-             response = await cloudinary.uploader.upload(imageFile,{
-              resource_type:'auto'
-            })
-            fs.unlinkSync(imageFile);
-          } catch (error) {
-              fs.unlinkSync(imageFile);
-              return null;
-=======
     // Upload the image to Cloudinary
     let response;
     try {
@@ -69,23 +58,24 @@ const addProduct = async (req: Request, res: Response) => {
             height: 500, 
             crop: 'fill',
             gravity: 'center', 
->>>>>>> Aryan
           }
         ]
       });
       fs.unlinkSync(imageFile);
 
     } catch (error) {
-      // Clean up the file in case of an error
       fs.unlinkSync(imageFile);
+
       return res.status(500).json({ success: false, message: "Error uploading to Cloudinary" });
     }
 
 
     const imageUrl = response.secure_url;
 
-    // Create and save the product in the database
-    const product = new Product({
+
+
+
+    const newproduct = new Product({
       title,
       description,
       price,
@@ -94,7 +84,8 @@ const addProduct = async (req: Request, res: Response) => {
       user: userId,
     });
 
-    await product.save();
+    await newproduct.save();
+    
 
     // Send response back to the client
     res.status(201).json({
@@ -102,11 +93,17 @@ const addProduct = async (req: Request, res: Response) => {
       message: "Product uploaded successfully",
     });
 
-  } catch (error: any) {
+
+  } catch (error: any) 
+  {
     console.error(error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+       success: false, message: error.message
+       });
   }
 };
 
 
 export default addProduct
+
+

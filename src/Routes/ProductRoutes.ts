@@ -27,4 +27,8 @@ const router = express.Router();
 //@ts-ignore
 router.post("/addproduct", VerifyJWT, upload.single('image'), addProduct);
 
+
+
+
+
 export default router;
